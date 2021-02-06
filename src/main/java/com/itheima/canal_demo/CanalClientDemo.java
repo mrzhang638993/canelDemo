@@ -1,5 +1,6 @@
 package com.itheima.canal_demo;
 
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
@@ -20,11 +21,9 @@ import java.util.Map;
 public class CanalClientDemo {
     public static void main(String[] args) {
         //1：创建连接
-        //CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress("node1", 11111), "example", "", "");
+        CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress("hadoop01", 11111), "example", "", "");
         //连接canalserver端集群环境
-        CanalConnector connector = CanalConnectors.newClusterConnector("node1:2181", "example", "canal", "canal");
-
-
+        //CanalConnector connector = CanalConnectors.newClusterConnector("node1:2181", "example", "canal", "canal");
         //指定一次性获取数据的条数
         int batchSize = 1000;
         boolean running = true;
@@ -34,7 +33,6 @@ public class CanalClientDemo {
             connector.connect();
             //回滚上次的get请求，重新获取数据
             connector.rollback();
-
             //订阅匹配日志
             connector.subscribe("itcast_shop.*");
             while (running) {

@@ -1,0 +1,15 @@
+syntax = "proto3";
+option java_package = "com.itheima.canal_demo";
+option java_outer_classname  = "CanalModel";
+
+//{"logfileOffset":18197,"columns":{"adName":"8F","positionType":"1","adURL":"","dataFlag":"1","adEndDate":"2030-03-05","adPositionId":"318","adSort":"0","adClickNum":"0","adId":"58","subTitle":"8F","adStartDate":"2016-02-02","createTime":"2019-02-23 15:01:23","adFile":"upload/adspic/2019-02/5c70efba204e1.png"},"logfileName":"mysql-bin.000004","eventType":"delete","schemaName":"itcast_shop","executeTime":1580887701000,"tableName":"itcast_ads"}
+message RowData{
+    int64 logFileOffset = 10;
+    string logFileName = 12;
+    string eventType = 11;
+    string schemaName = 1;
+    string tableName= 2;
+    uint64 executeTime = 3;
+
+    map<string, string> columns = 4;
+}

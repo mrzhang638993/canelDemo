@@ -20,10 +20,10 @@ import java.util.Map;
  */
 public class CanalClientDemo {
     public static void main(String[] args) {
-        //1：创建连接
-        CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress("hadoop01", 11111), "example", "", "");
-        //连接canalserver端集群环境
-        //CanalConnector connector = CanalConnectors.newClusterConnector("node1:2181", "example", "canal", "canal");
+        //1：创建连接。对应的是单机环境的操作的
+        //CanalConnector connector = CanalConnectors.newSingleConnector(new InetSocketAddress("hadoop01", 11111), "example", "", "");
+        //连接canalserver端集群环境，对应的是canal的集群环境的配置操作的.用户名称和密码是存在问题的，需要进行关注。
+        CanalConnector connector = CanalConnectors.newClusterConnector("hadoop01:2181,hadoop02:2181,hadoop03:2181", "example", "canal", "canal");
         //指定一次性获取数据的条数
         int batchSize = 1000;
         boolean running = true;
@@ -38,6 +38,7 @@ public class CanalClientDemo {
             while (running) {
                 //3：获取数据
                 //批量拉取binlog日志。一次拉取多条数据
+                //需要手动的保存数据的，这样的话可以保证数据的存储操作的。
                 Message message = connector.getWithoutAck(batchSize);
                 //获取batchid
                 long batchId = message.getId();
@@ -71,6 +72,8 @@ public class CanalClientDemo {
                      *  以后所有的操作，推荐使用protobuf的方式实现操作的。
                      *  可以节省网络资源和存储资源进行操作管理实现。
                      *  使用protobuf进行操作的话，需要书写相关的protobuf的语法操作的。
+                     *  canel获取数据的话,可以采用netty连接拉取自己对应的数据信息的。可以使用netty连接的方式实现相关的操作的。
+                     *
                      * */
                 }
                 connector.ack(batchId); // 提交确认

@@ -174,7 +174,7 @@ public class CanalClientDemo {
 
             // 封装列数据
             Map columnDataMap = new HashMap<String, Object>();
-            // 获取所有行上的变更
+            // 获取所有行上的变更，对应的是数据的变更信息的，体现的是数据从那个方面的数据修改操作
             CanalEntry.RowChange rowChange = CanalEntry.RowChange.parseFrom(entry.getStoreValue());
             List<CanalEntry.RowData> columnDataList = rowChange.getRowDatasList();
             for (CanalEntry.RowData rowData : columnDataList) {

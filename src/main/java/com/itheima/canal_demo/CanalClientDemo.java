@@ -47,15 +47,15 @@ public class CanalClientDemo {
                     //表示没有获取到数据
                 } else {
                     //有数据。打印数据
-                    //printSummary(message);
+                    printSummary(message);
 
                     //将binlog日志转换成json字符串输出
-                    String json = binlogToJson(message);  //这种方式不是我们的最终方案，我们需要将protobuf二进制数据写入到kafka中
-                    System.out.println(json);
+                    //String json = binlogToJson(message);  //这种方式不是我们的最终方案，我们需要将protobuf二进制数据写入到kafka中
+                    //System.out.println(json);
                     byte[] bytes = binlogToProtoBuf(message);
-                    for (byte b:bytes){
+                    /*for (byte b:bytes){
                         System.out.print(b);
-                    }
+                    }*/
                 }
 
                 connector.ack(batchId); // 提交确认

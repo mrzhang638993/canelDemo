@@ -48,7 +48,6 @@ public class CanalClientDemo {
                 } else {
                     //有数据。打印数据
                     printSummary(message);
-
                     //将binlog日志转换成json字符串输出
                     //String json = binlogToJson(message);  //这种方式不是我们的最终方案，我们需要将protobuf二进制数据写入到kafka中
                     //System.out.println(json);
@@ -57,7 +56,6 @@ public class CanalClientDemo {
                         System.out.print(b);
                     }*/
                 }
-
                 connector.ack(batchId); // 提交确认
             }
             //}
@@ -77,7 +75,6 @@ public class CanalClientDemo {
             if(entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONBEGIN || entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONEND) {
                 continue;
             }
-
             // 获取binlog文件名
             String logfileName = entry.getHeader().getLogfileName();
             // 获取logfile的偏移量
@@ -90,23 +87,19 @@ public class CanalClientDemo {
             String tableName = entry.getHeader().getTableName();
             // 获取事件类型 insert/update/delete
             String eventTypeName = entry.getHeader().getEventType().toString().toLowerCase();
-
             System.out.println("logfileName" + ":" + logfileName);
             System.out.println("logfileOffset" + ":" + logfileOffset);
             System.out.println("executeTime" + ":" + executeTime);
             System.out.println("schemaName" + ":" + schemaName);
             System.out.println("tableName" + ":" + tableName);
             System.out.println("eventTypeName" + ":" + eventTypeName);
-
             CanalEntry.RowChange rowChange = null;
-
             try {
                 // 获取存储数据，并将二进制字节数据解析为RowChange实体
                 rowChange = CanalEntry.RowChange.parseFrom(entry.getStoreValue());
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
             }
-
             // 迭代每一条变更数据
             for (CanalEntry.RowData rowData : rowChange.getRowDatasList()) {
                 // 判断是否为删除事件
@@ -143,7 +136,6 @@ public class CanalClientDemo {
     private static String binlogToJson(Message message) throws InvalidProtocolBufferException {
         // 1. 创建Map结构保存最终解析的数据
         Map rowDataMap = new HashMap<String, Object>();
-
         // 2. 遍历message中的所有binlog实体
         for (CanalEntry.Entry entry : message.getEntries()) {
             // 只处理事务型binlog
@@ -151,7 +143,6 @@ public class CanalClientDemo {
                     entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONEND) {
                 continue;
             }
-
             // 获取binlog文件名
             String logfileName = entry.getHeader().getLogfileName();
             // 获取logfile的偏移量
@@ -164,14 +155,12 @@ public class CanalClientDemo {
             String tableName = entry.getHeader().getTableName();
             // 获取事件类型 insert/update/delete
             String eventType = entry.getHeader().getEventType().toString().toLowerCase();
-
             rowDataMap.put("logfileName", logfileName);
             rowDataMap.put("logfileOffset", logfileOffset);
             rowDataMap.put("executeTime", executeTime);
             rowDataMap.put("schemaName", schemaName);
             rowDataMap.put("tableName", tableName);
             rowDataMap.put("eventType", eventType);
-
             // 封装列数据
             Map columnDataMap = new HashMap<String, Object>();
             // 获取所有行上的变更，对应的是数据的变更信息的，体现的是数据从那个方面的数据修改操作
@@ -189,10 +178,8 @@ public class CanalClientDemo {
                     }
                 }
             }
-
             rowDataMap.put("columns", columnDataMap);
         }
-
         return JSON.toJSONString(rowDataMap);
     }
 
@@ -200,7 +187,6 @@ public class CanalClientDemo {
     private static byte[] binlogToProtoBuf(Message message) throws InvalidProtocolBufferException {
         // 1. 构建CanalModel.RowData实体
         CanalModel.RowData.Builder rowDataBuilder = CanalModel.RowData.newBuilder();
-
         // 1. 遍历message中的所有binlog实体
         for (CanalEntry.Entry entry : message.getEntries()) {
             // 只处理事务型binlog
@@ -208,7 +194,6 @@ public class CanalClientDemo {
                     entry.getEntryType() == CanalEntry.EntryType.TRANSACTIONEND) {
                 continue;
             }
-
             // 获取binlog文件名
             String logfileName = entry.getHeader().getLogfileName();
             // 获取logfile的偏移量
@@ -221,14 +206,12 @@ public class CanalClientDemo {
             String tableName = entry.getHeader().getTableName();
             // 获取事件类型 insert/update/delete
             String eventType = entry.getHeader().getEventType().toString().toLowerCase();
-
             rowDataBuilder.setLogFileName(logfileName);
             rowDataBuilder.setLogFileOffset(logfileOffset);
             rowDataBuilder.setExecuteTime(executeTime);
             rowDataBuilder.setSchemaName(schemaName);
             rowDataBuilder.setTableName(tableName);
             rowDataBuilder.setEventType(eventType);
-
             // 获取所有行上的变更
             CanalEntry.RowChange rowChange = CanalEntry.RowChange.parseFrom(entry.getStoreValue());
             List<CanalEntry.RowData> columnDataList = rowChange.getRowDatasList();
@@ -245,7 +228,6 @@ public class CanalClientDemo {
                 }
             }
         }
-
         return rowDataBuilder.build().toByteArray();
     }
 }

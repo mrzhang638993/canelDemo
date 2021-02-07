@@ -55,6 +55,12 @@ public class CanalClientDemo {
                     /*for (byte b:bytes){
                         System.out.print(b);
                     }*/
+                    /**
+                     * kafka中可以书写的字符串的类型
+                     * 1.字符串的类型
+                     * 2.二进制的字节码信息
+                     * */
+                     
                 }
                 connector.ack(batchId); // 提交确认
             }

@@ -52,6 +52,7 @@ public class CanalClientDemo {
                     //String json = binlogToJson(message);  //这种方式不是我们的最终方案，我们需要将protobuf二进制数据写入到kafka中
                     //System.out.println(json);
                     byte[] bytes = binlogToProtoBuf(message);
+                    // 将转换之后的字节码的数据发送到kafka的集群中进行操作管理。
                     /*for (byte b:bytes){
                         System.out.print(b);
                     }*/
@@ -59,8 +60,17 @@ public class CanalClientDemo {
                      * kafka中可以书写的字符串的类型
                      * 1.字符串的类型
                      * 2.二进制的字节码信息
+                     *  从上面的mysql的binlog解析出来的数据，杂项太多了，需要进行精简处理操作
+                     *  kakfa中不需要这么多的垃圾数据的。数据量太大的话，对应的io资源花费的也是比较的多的
+                     *  可以使用protobuf的方式来精简存储资源和减少网络资源的消耗的。
+                     *  需要将存储的数据格式化成为资源占用比较少的数据的。
+                     *  kakfa可以使用protobuf的格式化的操作来减少数据的存储占用的。这个很关键的。
+                     *  protobuf的作用：格式化数据的序列化和反序列化的，常用于rpc的操作的。
+                     *  适合数据存储和rpc通讯操作的。和开发语言无关的。
+                     *  完全可以抛弃对应的fastjson的序列化的操作方式，从而使用protobuf的序列化方式实现序列化的操作的
+                     *  以后所有的操作，推荐使用protobuf的方式实现操作的。
+                     *  可以节省网络资源和存储资源进行操作管理实现。
                      * */
-                     
                 }
                 connector.ack(batchId); // 提交确认
             }

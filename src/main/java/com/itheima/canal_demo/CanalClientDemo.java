@@ -70,6 +70,7 @@ public class CanalClientDemo {
                      *  完全可以抛弃对应的fastjson的序列化的操作方式，从而使用protobuf的序列化方式实现序列化的操作的
                      *  以后所有的操作，推荐使用protobuf的方式实现操作的。
                      *  可以节省网络资源和存储资源进行操作管理实现。
+                     *  使用protobuf进行操作的话，需要书写相关的protobuf的语法操作的。
                      * */
                 }
                 connector.ack(batchId); // 提交确认

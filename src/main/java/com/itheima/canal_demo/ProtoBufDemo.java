@@ -25,6 +25,7 @@ public class ProtoBufDemo {
         }
 
         //将二进制转换成对象
+        // 可以将kakfa中的数据序列化成为对应的系列化的对象的。
         DemoModel.User user = DemoModel.User.parseFrom(bytes);
         System.out.println(user.getName());
     }

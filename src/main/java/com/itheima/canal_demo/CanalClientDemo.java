@@ -78,11 +78,9 @@ public class CanalClientDemo {
                      *  canel获取数据的话,可以采用netty连接拉取自己对应的数据信息的。可以使用netty连接的方式实现相关的操作的。
                      *
                      * */
-                    }*/
                 }
                 connector.ack(batchId); // 提交确认
             }
-            //}
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

@@ -31,7 +31,7 @@ public class CanalClientDemo {
             //while (running) {
             //2：建立连接
             connector.connect();
-            //回滚上次的get请求，重新获取数据
+            //回滚上次的get请求，重新获取数据。出现异常的话，可以重新读取原来的数据信息的。
             connector.rollback();
             //订阅匹配日志
             connector.subscribe("itcast_shop.*");
@@ -48,16 +48,15 @@ public class CanalClientDemo {
                 } else {
                     //有数据。打印数据
                     //printSummary(message);
-
                     //将binlog日志转换成json字符串输出
-                    String json = binlogToJson(message);  //这种方式不是我们的最终方案，我们需要将protobuf二进制数据写入到kafka中
-                    System.out.println(json);
+                    //String json = binlogToJson(message);  //这种方式不是我们的最终方案，我们需要将protobuf二进制数据写入到kafka中
+                    //System.out.println(json);
                     byte[] bytes = binlogToProtoBuf(message);
-                    for (byte b:bytes){
+                    //  获取protoBuf的操作逻辑，然后执行对应的逻辑操作的。数据需要保存到kafka的topic中的
+                   /* for (byte b:bytes){
                         System.out.print(b);
-                    }
+                    }*/
                 }
-
                 connector.ack(batchId); // 提交确认
             }
             //}
